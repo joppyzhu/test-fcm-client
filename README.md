@@ -36,7 +36,11 @@ curl -X POST -H "Authorization: key=<YOUR_SERVER_KEY>" -H "Content-Type: applica
   "to": "<YOUR_CLIENT_DEVICE_TOKEN>"
 }' "https://fcm.googleapis.com/fcm/send"
 ```
-Notes: Dont forget to replace *<YOUR_SERVER_KEY>* with your key and *<YOUR_CLIENT_DEVICE_TOKEN>* with your client device token.
+Notes: Dont forget to replace `<YOUR_SERVER_KEY>` with your key and `<YOUR_CLIENT_DEVICE_TOKEN>` with your client device token.
 
 # How to push the code to firebase hosting
-TBD
+- instal Firebase CLI with npm, you can install it with `npm install -g firebase-tools`
+- Go to your project
+- Run firebase login
+- Run firebase init
+- Run firebase deploy
