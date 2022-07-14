@@ -1,0 +1,31 @@
+<html>
+    <title>FCM Demo</title>
+    <style>
+        div {
+          font-family: arial;
+          font-size: 15px;
+          padding: 20px;
+        }
+        pre {
+          font-size: 12px;
+        }
+        span {
+          font-weight: bold;
+          font-size: 12px;
+        }
+    </style>
+    <body>
+        <div id="token" style="word-break: break-all;"></div>
+        <div>
+          <button onclick="deleteToken()">Delete Token</button> &nbsp;&nbsp;&nbsp;
+          <button onclick="doCopy()">Copy Token</button> &nbsp;&nbsp;&nbsp;
+          <button onclick="subscribeTopic()">Subscribe Topic</button>
+          <button onclick="unsubscribeTopic()">Unsubscribe Topic</button>
+        </div>
+        <div id="notis"></div>
+        <div id="err"></div>
+        <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js"></script>
+        <script src="index.js"></script>
+    </body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+    <title>Test Messaging</title>
+    <style>
+        div {
+          font-family: arial;
+          font-size: 15px;
+          padding: 20px;
+        }
+        pre {
+          font-size: 12px;
+        }
+        span {
+          font-weight: bold;
+          font-size: 12px;
+        }
+    </style>
+    <body>
+        <div id="info"></div>
+        <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js"></script>
+        <script type="text/javascript">
+            const infoElm = document.getElementById('info');
+            const config2_1 = {
+                apiKey:"AIzaSyD167NJDw4lw_S9Ss92GFSP_69BzyWY5mw",
+                authDomain:"first-hold-585.firebaseapp.com",
+                databaseURL:"https://first-hold-585.firebaseio.com",
+                storageBucket:"first-hold-585.appspot.com",
+                messagingSenderId:"352541370501"
+            };
+            const secondaryApp=firebase.initializeApp(config2_1,"Secondary");
+            const dbchat = secondaryApp.messaging();
+            dbchat.ref('/').once('value').then(function(mydata) {
+                mydata.forEach(function(snap) {
+                    console.log(snap.key);
+                    infoElm.innerHTML += 'Key : ' + snap.key + "<br>";
+                });
+            });
+        </script>
+    </body>
+</html>
