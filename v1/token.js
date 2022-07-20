@@ -2,14 +2,10 @@ const TokenElem = document.getElementById('token');
 const NotisElem = document.getElementById('notis');
 const ErrElem = document.getElementById('err');
 
+// Change this with your firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyBS9nB41rozDjuoYPpsm0BRdS7G0rsoueE",
-  authDomain: "test-fcm-token.firebaseapp.com",
-  projectId: "test-fcm-token",
-  storageBucket: "test-fcm-token.appspot.com",
-  messagingSenderId: "204145898436",
-  appId: "1:204145898436:web:0481b16e7ae4e4a506aa91"
 };
+
 firebase.initializeApp(firebaseConfig);
 
 const firebaseMessaging = firebase.messaging();
@@ -92,15 +88,4 @@ function doCopy() {
     alert("something went wrong");
   });
   
-}
-
-function subscribeTopic() {
-  firebaseMessaging.getToken().then(function (token) {
-    firebaseMessaging.subscribeTopic(token, "jakarta").then((response) => {
-      console.log('Successfully subscribed to topic:', response);
-    })
-    .catch((error) => {
-      console.log('Error subscribing to topic:', error);
-    });;
-  });
 }

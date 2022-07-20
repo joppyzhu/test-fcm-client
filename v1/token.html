@@ -1,5 +1,5 @@
 <html>
-    <title>Test Messaging</title>
+    <title>FCM Demo</title>
     <style>
         div {
           font-family: arial;
@@ -15,8 +15,15 @@
         }
     </style>
     <body>
-        <div id="info"></div>
+        <div id="token" style="word-break: break-all;"></div>
+        <div>
+          <button onclick="deleteToken()">Delete Token</button>
+          <button onclick="doCopy()">Copy text</button>
+        </div>
+        <div id="notis"></div>
+        <div id="err"></div>
         <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase-messaging.js"></script>
+        <script src="token.js"></script>
     </body>
 </html>
