@@ -10,42 +10,31 @@
 </head>
 <body class="bg-light">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-messaging.js"></script>
+    <script src="login.js?v=2"></script>
     <script type="text/javascript">
-        const apiUrl = "http://localhost:8080/";
         $(document).ready(function(){
-            var deviceId = getCookie("deviceId");
-            var data = {deviceId:deviceId};
-            $.ajax({
-                type: "POST",
-                url: apiUrl + "auth/v1/init",
-                data: data
-            }).done(function(response) {
-                setCookie("deviceId", response.deviceId, 1);
-                setCookie("key", response.key, 1);
-                window.location.replace("./login.html");
+            const firebaseMessaging = firebase.messaging();
+            firebaseMessaging.requestPermission().then(function () {
+                return firebaseMessaging.getToken();
+            }).then(function (token) {
+                var deviceId = getCookie("deviceId");
+                var data = {deviceId:deviceId,token:token};
+                $.ajax({
+                    type: "POST",
+                    url: apiUrl + "auth/v1/init",
+                    data: data
+                }).done(function(response) {
+                    setCookie("deviceId", response.deviceId, 1);
+                    setCookie("key", response.key, 1);
+                    window.location.replace("./login.html");
+                });   
+            }).catch(function (err) {
+                alert(err);
             });
         });
-        function setCookie(cname, cvalue, exdays) {
-            const d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            let expires = "expires="+ d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-        function getCookie(cname) {
-            let name = cname + "=";
-            let decodedCookie = decodeURIComponent(document.cookie);
-            let ca = decodedCookie.split(';');
-            for(let i = 0; i <ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
     </script>
 </body>
 </html>
