@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
+    <title>Verify | Firebase Auth</title>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row mx-1">
+            <div class="col-lg-10 col-md-10 offset-lg-1 offset-md-1 bg-white shadow my-5 border border-primary">
+                <div class="row">
+                     <div class="col-lg-10 col-md-10 p-lg-5 p-md-5 px-3 py-4 text-dark">
+                        <div id="profileSection">
+                            <div class="col-12 col-12 mb-4 text-center">
+                                <span class="h3" id="userPfFullName">Please verify your email </span>
+                                <span class="h3" id="userPfSurname"></span>
+                            </div>
+                            <div class="col-lg-12 col-md-12 text-center">
+                                <button type="button" class="btn btn-outline-secondary text-uppercase" onclick="gotologin()">
+                                Login<small></small></button>
+                                <button type="button" class="btn btn-outline-secondary text-uppercase" onclick="resend()">
+                                    RESEND EMAIL VERIFY<small></small></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-auth.js"></script>
+    <script src="login.js"></script>
+    <script type="text/javascript">
+        function gotologin() {
+            window.location = "./login.html";
+        }
+        
+    </script>
+</body>
+</html>
