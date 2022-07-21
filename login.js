@@ -202,12 +202,16 @@ function signOut(){
         "Authorization": "Bearer " + getCookie("accessToken")
       } 
     }).done(function(response) {
-      console.log(printObj(response));
       eraseCookie("accessToken");
       eraseCookie("refreshToken");
       alert("See you");
       window.location.replace("./login.html");
-    });
+    }).fail(function(response) {
+      var httpResponse = response.responseJSON.code;
+      if (httpResponse == "401") {
+        window.location.replace("./login.html");
+      }
+  });
   }).catch(function(error) {
       let errorMessage = error.message;
       alert(errorMessage);
@@ -230,9 +234,9 @@ function printObj(obj) {
   return JSON.stringify(obj);
 }
 
-function setCookie(cname, cvalue, exdays) {
+function setCookie(cname, cvalue) {
   const d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  d.setTime(d.getTime() + (1*24*60*60*1000));
   let expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
