@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700" rel="stylesheet">
+    <title>Mobile Init</title>
+</head>
+<body class="bg-light" style="padding:20px">
+    <h4>Remaining time</h4>
+    <div id="example">
+		<span class="days">00</span><span class="days_text">Days</span>&nbsp;:&nbsp;
+		<span class="hours">00</span><span class="hours_text">Hours</span>&nbsp;:&nbsp;
+		<span class="minutes">00</span><span class="minutes_text">Minutes</span>&nbsp;:&nbsp;
+		<span class="seconds">00</span><span class="seconds_text">Seconds</span>
+	</div>
+    <div>
+        <br/>
+        <button id="btnStart">START</button>
+    </div>
+    <br/><br/>
+    <div>
+        <h4>Info</h4>
+        <div>Highest Bid: <span id="divBid"></span></div>
+        <div>Current winner: <span id="divName"></span></div>
+    </div>
+    <br/><br/>
+    <div>
+        <table>
+            <tr>
+                <td>Name: </td>
+                <td><input type="text" id="txtName"/></td>
+            </tr>
+            <tr>
+                <td>Bid: </td>
+                <td><input type="text" id="txtBid"/></td>
+            </tr>
+        </table><br/>
+        <button id="btnSubmit">SUBMIT BID</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-database.js"></script>
+    <script src="jquery.countdown.min.js"></script>
+    <script type="text/javascript">
+        
+        $(document).ready(function() {
+            const apiUrl = "http://localhost:8080/";
+            const firebaseConfig = {
+                apiKey: "AIzaSyBS9nB41rozDjuoYPpsm0BRdS7G0rsoueE",
+                authDomain: "test-fcm-token.firebaseapp.com",
+                projectId: "test-fcm-token",
+                storageBucket: "test-fcm-token.appspot.com",
+                messagingSenderId: "204145898436",
+                appId: "1:204145898436:web:0481b16e7ae4e4a506aa91",
+                databaseURL: "https://test-fcm-token-default-rtdb.asia-southeast1.firebasedatabase.app"
+            };
+
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
+            var closingTime = 0;
+
+            database.ref('auction/abc').on('value', (snapshot) => {
+                console.log("VALUE", snapshot.val());
+                clearAll();
+                $("#divBid").html(snapshot.val().highestBid);
+                $("#txtBid").val(parseInt(snapshot.val().highestBid) + 1);
+                $("#divName").html(snapshot.val().name);
+                load(snapshot.val().closeTime);
+            }); 
+            $("#btnStart").click(function(){
+                var now = new Date();
+                var closing = new Date(now.valueOf() + (30 * 1000)).valueOf();
+                firebase.database().ref('auction/abc').update({
+                    closeTime: closing,
+                    highestBid: 0,
+                    name: ""
+                });
+            });
+            
+            $("#btnSubmit").click(function(){
+                var bid = $("#txtBid").val();
+                var username = $("#txtName").val();
+                /*$.ajax({ 
+                    type: "GET",
+                    url: apiUrl + "v1/submit"
+                }).done(function(response) {
+                    console.log(response.closeTime);
+                    load(response.closeTime);
+                });*/
+                var now = new Date().valueOf();
+                if (closingTime - now < 10000) {
+                    var closing = new Date(now + (12 * 1000)).valueOf();
+                    firebase.database().ref('auction/abc').update({
+                        closeTime: closing,
+                        highestBid: bid,
+                        name: username
+                    });
+                } else {
+                    firebase.database().ref('auction/abc').update({
+                        highestBid: bid,
+                        name: username
+                    });
+                }
+                
+               
+            });
+
+            /*$.ajax({ 
+                type: "GET",
+                url: apiUrl + "v1/load"
+            }).done(function(response) {
+                console.log(response.closeTime);
+                load(response.closeTime);
+            }); */  
+            function load(a) {
+                closingTime = a;
+                clearInterval();
+                $('#example').countdown({
+                    date: new Date(a - (7 * 60 * 60 * 1000)),
+                    day: 'Day',
+                    days: 'Days',
+                    hideOnComplete: false
+                }, function (container) {
+                    console.log("abis waktu " + new Date(a));
+                    if ($("#txtName").val() != "") {
+                        alert($("#divName").html() + " menang.");
+                    }
+                });
+            }
+            function cek() {
+                $.ajax({
+                    type: "GET",
+                    url: apiUrl + "v1/cek"
+                }).done(function(response) {
+                    console.log(response.closeTime);
+                    load(response.closeTime);
+                });
+            }
+            function clearAll() {
+                for (var i = setTimeout(function() {}, 0); i > 0; i--) {
+                    window.clearInterval(i);
+                    window.clearTimeout(i);
+                    if (window.cancelAnimationFrame) window.cancelAnimationFrame(i);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

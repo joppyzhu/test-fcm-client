@@ -1,6 +1,6 @@
 // Change this with your firebase config
 
-const apiUrl = "http://localhost:8080/";
+const apiUrl = "http://174.138.30.226:8080/";
 const firebaseConfig = {
   apiKey: "AIzaSyBS9nB41rozDjuoYPpsm0BRdS7G0rsoueE",
   authDomain: "test-fcm-token.firebaseapp.com",
@@ -112,15 +112,15 @@ function signInFb() {
   firebase.auth()
     .signInWithPopup(provider)
     .then((result) => {
-      if (result.user.emailVerified) {
+      if (!result.user.emailVerified) {
         const user = firebase.auth().currentUser;
         user.updateProfile({
-          emailVerified: "true"
-        })
+          emailVerified: true
+        });
       }
       var credential = result.user.toJSON().stsTokenManager;
       var token = credential.accessToken;
-      $.ajax({
+      /*$.ajax({
         type: "POST",
         url: apiUrl + "auth/v1/login",
         headers: {
@@ -130,7 +130,7 @@ function signInFb() {
         } 
       }).done(function(response) {
         handleLogin(response);
-      });
+      });*/
     })
     .catch((error) => {
       var errorMessage = error.message;
@@ -202,12 +202,16 @@ function signOut(){
         "Authorization": "Bearer " + getCookie("accessToken")
       } 
     }).done(function(response) {
-      console.log(printObj(response));
       eraseCookie("accessToken");
       eraseCookie("refreshToken");
       alert("See you");
       window.location.replace("./login.html");
-    });
+    }).fail(function(response) {
+      var httpResponse = response.responseJSON.code;
+      if (httpResponse == "401") {
+        window.location.replace("./login.html");
+      }
+  });
   }).catch(function(error) {
       let errorMessage = error.message;
       alert(errorMessage);
@@ -230,9 +234,9 @@ function printObj(obj) {
   return JSON.stringify(obj);
 }
 
-function setCookie(cname, cvalue, exdays) {
+function setCookie(cname, cvalue) {
   const d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  d.setTime(d.getTime() + (1*24*60*60*1000));
   let expires = "expires="+ d.toUTCString();
   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }

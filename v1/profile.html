@@ -19,6 +19,7 @@
                             <div class="col-12 col-12 mb-4 text-center">
                                 <span class="h3" id="userPfFullName">Welcome, </span>
                                 <span class="h3" id="userPfSurname"></span>
+                                <span class="h3" id="userPfScope"></span>
                             </div>
                             <div class="col-lg-12 col-md-12 mb-4 text-center">
                                 <p id="userPfBio"></p>
@@ -43,7 +44,7 @@
     <script src="https://www.gstatic.com/firebasejs/6.1.1/firebase-auth.js"></script>
     <script src="login.js"></script> 
     <script type="text/javascript">
-        $(document).ready(function(){
+        function loadUser() {
             $.ajax({
                 type: "POST",
                 url: apiUrl + "user/v1/detail",
@@ -62,13 +63,46 @@
             }).fail(function(response) {
                 var httpResponse = response.responseJSON.code;
                 if (httpResponse == "401") {
-                    if (getCookie("refreshToken") == "") {
+                    if (getCookie("accessToken") == "") {
                         alert("Please login");
+                        window.location.replace("./login.html");
                     } else {
-                        
+                        firebase.auth().onAuthStateChanged((user)=>{
+                            if (user) {
+                                user.getIdToken(true).then(function(idToken) { 
+                                   setCookie("accessToken", idToken);
+                                   loadSeller();
+                                   loadUser();
+                                });
+                            } else {
+                                alert("Please login");
+                                window.location.replace("./login.html");
+                            }
+                        });
                     }
                 }
             });
+        }
+
+        function loadSeller() {
+            $.ajax({
+                type: "POST",
+                url: apiUrl + "user/v1/seller",
+                headers: {
+                    "Authorization": "Bearer " + getCookie("accessToken")
+                }
+            }).done(function(response) {
+                document.getElementById("userPfScope").innerHTML = "(SELLER)";
+            }).fail(function(response) {
+                var httpResponse = response.responseJSON.status;
+                if (httpResponse == "403") {
+                    document.getElementById("userPfScope").innerHTML = "(USER)";
+                }
+            });
+        }
+        $(document).ready(function(){
+            loadUser();
+            loadSeller();
         });
        /* firebase.auth().onAuthStateChanged((user)=>{
             if (user) {

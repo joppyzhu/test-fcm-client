@@ -7,7 +7,8 @@ const firebaseConfig = {
   projectId: "test-fcm-token",
   storageBucket: "test-fcm-token.appspot.com",
   messagingSenderId: "204145898436",
-  appId: "1:204145898436:web:0481b16e7ae4e4a506aa91"
+  appId: "1:204145898436:web:0481b16e7ae4e4a506aa91",
+  databaseURL: "https://test-fcm-token-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -112,7 +113,7 @@ function signInFb() {
   firebase.auth()
     .signInWithPopup(provider)
     .then((result) => {
-      if (result.user.emailVerified) {
+      if (!result.user.emailVerified) {
         const user = firebase.auth().currentUser;
         user.updateProfile({
           emailVerified: "true"
